@@ -1,0 +1,40 @@
+<!-- home.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accueil</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Bienvenue, <span id="user-email"></span></h1>
+        <a href="/logout" class="btn">Déconnexion</a>
+        <p>Ceci est votre section personnelle. Vous pouvez ajouter, modifier et gérer vos projets ici.</p>
+    </div>
+
+    <script>
+        // Fonction pour vérifier la session et rediriger si l'utilisateur n'est pas connecté
+        function checkSession() {
+            fetch('/check-session', {
+                method: 'GET',
+                credentials: 'include'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.isLoggedIn) {
+                    window.location.href = '/login';
+                } else {
+                    localStorage.setItem('userEmail', data.email);
+                    document.getElementById('user-email').textContent = data.email;
+                }
+            })
+            .catch(error => console.error('Erreur lors de la vérification de la session:', error));
+        }
+
+        // Appel de la fonction pour vérifier la session lors du chargement de la page
+        checkSession();
+    </script>
+</body>
+</html>
